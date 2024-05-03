@@ -1,5 +1,7 @@
+import { Link } from "react-router-dom";
+
 const AuthLayouts = (props) => {
-  const { children, title } = props;
+  const { children, title, type } = props;
   return (
     <div className="flex justify-center min-h-screen items-center">
       <div className="w-full max-w-xs">
@@ -8,6 +10,25 @@ const AuthLayouts = (props) => {
           Welcome, please enter your detail
         </p>
         {children}
+        <p className="text-sm mt-5 text-center">
+          {type === "login"
+            ? "Don`t have an account? "
+            : "Already have an account? "}
+          {/* ====== Penggunaan Tag <a> Tidak Baik atau tidak disarankan ====== */}
+          {/* <a href="/register" className="font-bold text-blue-600">
+          Sign Up
+        </a> */}
+          {/* ====== Ganti menggunakan <Link to=""/> ====== */}
+          {type === "login" ? (
+            <Link to="/register" className="font-bold text-blue-600">
+              Sign Up
+            </Link>
+          ) : (
+            <Link to="/login" className="font-bold text-blue-600">
+              Login
+            </Link>
+          )}
+        </p>
       </div>
     </div>
   );
