@@ -2,16 +2,25 @@ import { useEffect, useRef, useState } from "react";
 import Button from "../components/Elements/Button";
 import CardProduct from "../components/Fragments/CardProduct";
 import { getProducts } from "../services/product.services";
-
-const email = localStorage.getItem("email");
+import { getUsername } from "../services/auth.services";
 
 const ProductPage = () => {
   const [cart, setCart] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [products, setProducts] = useState([]);
+  const [username, setUsername] = useState("");
 
   useEffect(() => {
     setCart(JSON.parse(localStorage.getItem("cart")) || []);
+  }, []);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setUsername(getUsername(token));
+    } else {
+      window.location.href = "/login";
+    }
   }, []);
 
   useEffect(() => {
@@ -32,8 +41,7 @@ const ProductPage = () => {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("email");
-    localStorage.removeItem("password");
+    localStorage.removeItem("token");
     window.location.href = "/login";
   };
 
@@ -49,14 +57,6 @@ const ProductPage = () => {
     }
   };
 
-  // UseReff
-  // const cartRef = useRef([{ id: 1, qty: 2 }]);
-
-  // const handleAddToCartRef = (id) => {
-  //   cartRef.current = [...cartRef.current, { id, qty: 1 }];
-  //   localStorage.setItem("cart", JSON.stringify(cartRef.current));
-  // };
-
   const totalPriceRef = useRef(null);
   useEffect(() => {
     if (cart.length > 0) {
@@ -70,7 +70,7 @@ const ProductPage = () => {
     <>
       {/* ======= NAVBAR ======= */}
       <div className="flex justify-end h-20 bg-blue-600 text-white items-center px-10">
-        {email}
+        {username}
         <Button classname="ml-5 bg-black" onClick={handleLogout}>
           Logout
         </Button>
@@ -155,9 +155,6 @@ const ProductPage = () => {
         </div>
         {/* ======= END CART ======= */}
       </div>
-      {/* <div className="flex justify-center mb-5">
-        <Counter></Counter>
-      </div> */}
     </>
   );
 };
